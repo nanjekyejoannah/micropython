@@ -30,17 +30,17 @@ Get the code
 It is recommended that you maintain a fork of the MicroPython repository for your development purposes.
 The process of obtaining the source code includes the following:
 
-#. Fork the repository https://github.com/micropython/micropython.git
-#. You will now have a fork at <https://github.com/<yourusername>/micropython.git>.
-#. Clone the repository. You may clone either your fork or the main MicroPython repository.
-   Use one of the commands below:
+Fork the repository https://github.com/micropython/micropython.git
+You will now have a fork at <https://github.com/<yourusername>/micropython.git>.
+Clone the repository. You may clone either your fork or the main MicroPython repository.
+Use one of the commands below:
 
 .. code-block:: console
 
    $ git clone https://github.com/micropython/micropython.git 
    $ git clone https://github.com/<yourusername>/micropython.git
 
-#. Depending on what you cloned, do the necessary configuration.
+Depending on what you cloned, do the necessary configuration.
 
 Configure upstream if you cloned your fork.
 

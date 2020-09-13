@@ -7,21 +7,21 @@ For a detailed getting started guide, see :ref:`gettingstarted`.
 This a compressed quick developer checklist on the basics of setting up
 and making a contribution.
 
-#. Clone the source code:
+Clone the source code:
 
 .. code-block:: console
 
    $ git clone https://github.com/micropython/micropython.git 
    $ cd micropython
 
-#. Build mpy-cross:
+Build mpy-cross:
 
 .. code-block:: console
 
    $ cd mpy-cross
    $ make
 
-#. Build MicroPython for the unix port:
+Build MicroPython for the unix port:
 
 .. code-block:: console
 
@@ -29,7 +29,7 @@ and making a contribution.
    $ make submodules
    $ make
 
-#. Run MicroPython:
+Run MicroPython:
 
 .. code-block:: console
 
@@ -37,13 +37,13 @@ and making a contribution.
 
 On windows use ``wine`` and replace ``./micropython`` with ``wineconsole --backend=curses ./micropython.exe``.
 
-#. Run the testsuite:
+Run the testsuite:
 
 .. code-block:: console
 
    $ make test
 
-#. Build the Docs:
+Build the Docs:
 
 .. code-block:: console
 
@@ -55,10 +55,10 @@ General Project Quick References
 
 Here are some links to references you will find useful.
 
-+ `The MicroPython Repository <https://github.com/micropython/micropython>`_.
-+ `Open Issues <https://github.com/micropython/micropython/issues>`_.
-+ `Developer Forum <https://forum.micropython.org/>`_.
-+ `The Wiki <https://github.com/micropython/micropython/wiki>`_.
+* `The MicroPython Repository <https://github.com/micropython/micropython>`_.
+* `Open Issues <https://github.com/micropython/micropython/issues>`_.
+* `Developer Forum <https://forum.micropython.org/>`_.
+* `The Wiki <https://github.com/micropython/micropython/wiki>`_.
 
 Development Links
 -----------------
