@@ -13,4 +13,3 @@ MicroPython documentation and references
     esp32/quickref.rst
     wipy/quickref.rst
     unix/quickref.rst
-    micropythoninternals/index.rst
