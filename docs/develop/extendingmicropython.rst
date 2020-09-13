@@ -9,7 +9,7 @@ See the `getting started guide
 <https://github.com/micropython/micropython/wiki/Getting-Started>`_ for further information.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
 
    cmodules.rst
    qstr.rst

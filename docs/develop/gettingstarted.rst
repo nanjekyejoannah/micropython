@@ -7,27 +7,31 @@ This guide covers a step by step process on setting up version control, obtainin
 a copy of the source code on a port, building the Docs, running tests and a description of the 
 directory structure of the MicroPython code base.
 
+.. note::
+   For a quick developer checklist on the basics of setting up and making a contribution,
+   see the developer quick reference :ref:`developerreference`.
+
 Source control with git
 -----------------------
 
 MicroPython is hosted on GitHub and uses ``git`` for source control. The workflow is such that
-code is pulled and push to and from the main repository. Install the respective version of ``Git`` for 
+code is pulled and pushed to and from the main repository. Install the respective version of ``Git`` for 
 your operating system to follow through the rest of the steps.
 
 .. note::
    For a reference on the installation instructions, please refer to 
-   `Git installation instructions <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`_.
+   the `Git installation instructions <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`_.
    Learn about the basic git commands in this `Git Handbook <https://guides.github.com/introduction/git-handbook/>`_
    or any other sources on the internet.
 
-Getting the code
+Get the code
 ----------------
 
 It is recommended that you maintain a fork of the MicroPython repository for your development purposes.
 The process of obtaining the source code includes the following:
 
-#. Fork the repository https://github.com/micropython/micropython.
-#. You will now have a fork at https://github.com/<yourusername>/micropython.
+#. Fork the repository https://github.com/micropython/micropython.git
+#. You will now have a fork at <https://github.com/<yourusername>/micropython.git>.
 #. Clone the repository. You may clone either your fork or the main MicroPython repository.
    Use one of the commands below:
 
@@ -47,7 +51,7 @@ Configure upstream if you cloned your fork.
 
 Configure upstream and origin if you cloned the main repository. You can maintain your
 own mapping but it is recommended that origin maps to your fork and upstream to the main
-repository:
+MicroPython repository:
 
 .. code-block:: console
 
@@ -65,27 +69,28 @@ After the above configuration, your setup should be similar to this:
    upstream	https://github.com/micropython/micropython.git (push)
 
 You should now have a copy of the source code. By default you are pointing
-to the master branch.To get ready for further development, it is recommended
+to the master branch. To get ready for further development, it is recommended
 to work on a development branch.
 
 .. code-block:: console
 
     $ git checkout -b dev-branch
 
-You can give it any name. You will have to compile MicroPython whenever you move 
-among branches.
+You can give it any name. You will have to compile MicroPython whenever you change 
+to a different branch.
 
 Build the Code
 --------------
 
-For development, you should compile MicroPython for a platform which corresponds
-to a port. Install the required dependencies for the port in order to sucessfully
+For development, you should compile MicroPython for a specific platform which corresponds
+to a port. Before any building for a port, first build the MicroPython cross-compiler.
+Install the required dependencies for the port in order to sucessfully
 compile and build.
 
 Build the cross-compiler
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Almost all ports require building the ``mpy-cross`` first to perform pre-compilation
+Almost all ports require building ``mpy-cross`` first to perform pre-compilation
 of scripts that will be included in the port firmware:
 
 .. code-block:: console
@@ -152,7 +157,7 @@ The stm32 port
 ~~~~~~~~~~~~~~
 
 Like the unix port, you need to install some required dependencies.
-The ARM compiler is a required:
+The ARM compiler is required:
 
 .. code-block:: console
 
@@ -188,7 +193,7 @@ Then run easily with ``wine``:
    $ wineconsole --backend=curses ./micropython.exe
 
 Refer to the `windows port documentation <https://github.com/micropython/micropython/tree/master/ports/windows>`_
-on more details on building using Cygwin and MC visual Studio 2013 or higher.
+on more details on building using Cygwin and MS visual Studio 2013 or higher.
 
 Build the Docs
 --------------
@@ -213,7 +218,7 @@ Buld the docs:
    $ make html
 
 Open ``docs/build/html/index.html`` in your browser to view the docs locally. Refer to the 
-documentation on `importing your documentation to Read the Docs
+documentation on `importing your documentation to use Read the Docs
 <https://docs.readthedocs.io/en/stable/intro/import-guide.html>`_.
 
 Run the tests
@@ -225,14 +230,14 @@ To run all tests in the testsuite, use make:
 
    $ make test
 
-.. note::
+.. warning::
    Make sure you are in the port directory where MicroPython was built before running the tests. 
    Running outside your port will not work.
 
 Folder structure
 ----------------
 
-There are a couple of directories to take note of in terms of where a certain implementation details
+There are a couple of directories to take note of in terms of where certain implementation details
 are. The following is a break down of the top-level folders in the source code.
 
 ``py``

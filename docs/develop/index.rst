@@ -23,4 +23,3 @@ micropython to a new platform and implementing a new MicroPython library.
    porting.rst
 
    extendingmicropython.rst
-   devref.rst
