@@ -71,4 +71,4 @@ The various delopment related links:
 * `Development Workflow <https://github.com/micropython/micropython/wiki/DevelWorkflow>`_.
 * `Code Stats <http://micropython.org/resources/code-dashboard/>`_.
 * `ARM Toolchain <https://github.com/micropython/micropython/wiki/Getting-Started-STM>`_.
-* More Architecture <https://github.com/micropython/micropython/wiki/CrossBranch>`_.
+* `More Architecture <https://github.com/micropython/micropython/wiki/CrossBranch>`_.
