@@ -66,8 +66,8 @@ Development Links
 The various delopment related links:
 
 * `MicroPython Internals <http://docs.micropython.org/en/latest/develop/index.html>`_.
-* `Code conventions <https://github.com/micropython/micropython/blob/master/CODECONVENTIONS.md>`_.
-* `Contributor guidelines <https://github.com/micropython/micropython/wiki/ContributorGuidelines>`_.
+* `Code Conventions <https://github.com/micropython/micropython/blob/master/CODECONVENTIONS.md>`_.
+* `Contributor Guidelines <https://github.com/micropython/micropython/wiki/ContributorGuidelines>`_.
 * `Development Workflow <https://github.com/micropython/micropython/wiki/DevelWorkflow>`_.
 * `Code Stats <http://micropython.org/resources/code-dashboard/>`_.
 * `ARM Toolchain <https://github.com/micropython/micropython/wiki/Getting-Started-STM>`_.
