@@ -157,7 +157,7 @@ The stm32 port
 ~~~~~~~~~~~~~~
 
 Like the unix port, you need to install some required dependencies.
-The ARM compiler is required:
+The ARM cross-compiler is required:
 
 .. code-block:: console
 
