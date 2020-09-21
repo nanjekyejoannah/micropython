@@ -24,7 +24,7 @@ The Compiler
 ------------
 
 The subsection details the compiler implementation, any intermediate 
-representations and optimizations done. It also includes how bytecode
+representations and optimizations. It also includes how bytecode
 and native code is emitted, memory management (GC) and type checking.
 
 * A reference of py/compile.c, py/compile.h.
