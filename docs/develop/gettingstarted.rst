@@ -3,15 +3,15 @@
 Getting Started
 ===============
 
-This guide covers a step by step process on setting up version control, obtaining and building
+This guide covers a step-by-step process on setting up version control, obtaining and building
 a copy of the source code for a port, building the Docs, running tests and a description of the 
 directory structure of the MicroPython code base.
 
 .. note::
    For a quick developer checklist on the basics of setting up and making a contribution,
-   see the developer quick reference :ref:`developerreference`.
+   see the :ref:`developerreference`.
 
-Source control with git
+Source control with Git
 -----------------------
 
 MicroPython is hosted on GitHub and uses ``git`` for source control. The workflow is such that
@@ -30,17 +30,19 @@ Get the code
 It is recommended that you maintain a fork of the MicroPython repository for your development purposes.
 The process of obtaining the source code includes the following:
 
-#. Fork the repository https://github.com/micropython/micropython.git
-#. You will now have a fork at <https://github.com/<yourusername>/micropython.git>.
-#. Clone the repository. You may clone either your fork or the main MicroPython repository.
+| Fork the repository https://github.com/micropython/micropython.git
+| You will now have a fork at <https://github.com/<your-user-name>/micropython.git>.
+| Clone the repository. You may clone either your fork or the main MicroPython repository.
    Use one of the commands below:
 
 .. code-block:: console
 
    $ git clone https://github.com/micropython/micropython.git 
-   $ git clone https://github.com/<yourusername>/micropython.git
+   $ git clone https://github.com/<your-user-name>/micropython.git
 
-Depending on what you cloned, do the necessary configuration.
+Depending on what you cloned, `configure the remote 
+repositories <https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes>`_ to be able to
+collaborate on the MicroPython project.
 
 Configure upstream if you cloned your fork.
 
@@ -49,27 +51,28 @@ Configure upstream if you cloned your fork.
    $ cd micropython
    $ git remote add upstream https://github.com/micropython/micropython.git
 
-It is common to configure ``upstream`` and ``origin`` on a forked repository to assist with sharing code changes. You can maintain your
-own mapping but it is recommended that origin maps to your fork and upstream to the main
+It is common to configure ``upstream`` and ``origin`` on a forked repository
+to assist with sharing code changes. You can maintain your own mapping but
+it is recommended that ``origin`` maps to your fork and ``upstream`` to the main
 MicroPython repository:
 
 .. code-block:: console
 
    $ cd micropython
    $ git remote add upstream https://github.com/micropython/micropython.git
-   $ git remote set-url origin https://github.com/<yourusername>/micropython.git
+   $ git remote set-url origin https://github.com/<your-user-name>/micropython.git
 
 After the above configuration, your setup should be similar to this:
 
 .. code-block:: console
 
-   origin	https://github.com/<yourusername>/micropython.git (fetch)
-   origin	https://github.com/<yourusername>/micropython.git (push)
+   origin	https://github.com/<your-user-name>/micropython.git (fetch)
+   origin	https://github.com/<your-user-name>/micropython.git (push)
    upstream	https://github.com/micropython/micropython.git (fetch)
    upstream	https://github.com/micropython/micropython.git (push)
 
 You should now have a copy of the source code. By default you are pointing
-to the master branch. To get ready for further development, it is recommended
+to the master branch. To prepare for further development, it is recommended
 to work on a development branch.
 
 .. code-block:: console
@@ -79,12 +82,12 @@ to work on a development branch.
 You can give it any name. You will have to compile MicroPython whenever you change 
 to a different branch.
 
-Build the Code
---------------
+Compile and Build the Code
+--------------------------
 
 For development, you should compile MicroPython for a specific platform which corresponds
-to a port. Before any building for a port, first build the MicroPython cross-compiler.
-Install the required dependencies for the port in order to sucessfully
+to a port. Before building for any port, first build the MicroPython cross-compiler.
+You should also install the required dependencies for the port in order to sucessfully
 compile and build.
 
 Build the cross-compiler
@@ -106,16 +109,17 @@ If ``mpy-cross`` built successfully, you should see a message similar to this:
       text	   data	    bss	    dec	    hex	filename
     279328	    776	    880	 280984	  44998	mpy-cross
 
-The unix port
-~~~~~~~~~~~~~
+Build for the Unix Port
+~~~~~~~~~~~~~~~~~~~~~~~
 To build for the unix port, make sure you have a working environment for ``gcc`` and ``GNU make``.
-All Unixes come with ``gcc`` installed. Confirm if unsure:
+Ubuntu 20.04 has been used for the example below but other unixes ought to work with little
+modification:
 
 .. code-block:: console
 
    $ gcc --version
-   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
-   Copyright (C) 2015 Free Software Foundation, Inc.
+   gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This is free software; see the source for copying conditions.  There is NO
    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -153,8 +157,8 @@ Now run it:
    hello world
    >>>
 
-The stm32 port
-~~~~~~~~~~~~~~
+Build for the stm32 port
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Like the unix port, you need to install some required dependencies.
 The ARM cross-compiler is required:
@@ -174,10 +178,10 @@ Build:
 Please refer to the `stm32 documentation <https://github.com/micropython/micropython/tree/master/ports/stm32>`_ 
 for more details on flashing the firmare.
 
-The Windows port
-~~~~~~~~~~~~~~~~
+Build for the Windows port
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The windows port is experimental and based on the unix port. Build on 
+The Windows port is experimental and based on the Unix port. Build on 
 debian/linux systems using the following commands:
 
 .. code-block:: console
@@ -211,7 +215,7 @@ Navigate to the docs directory:
 
    $ cd docs
 
-Buld the docs:
+Build the docs:
 
 .. code-block:: console
 
@@ -224,7 +228,7 @@ documentation on `importing your documentation to use Read the Docs
 Run the tests
 -------------
 
-To run all tests in the testsuite, use make:
+To run all tests in the testsuite, use ``make``:
 
 .. code-block:: console
 

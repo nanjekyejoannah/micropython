@@ -7,14 +7,14 @@ For a detailed getting started guide, see :ref:`gettingstarted`.
 This is a quick developer checklist on the basics of setting up
 and making a contribution.
 
-Clone the source code:
+Clone the repository:
 
 .. code-block:: console
 
    $ git clone https://github.com/micropython/micropython.git 
    $ cd micropython
 
-Build mpy-cross:
+Build ``mpy-cross``:
 
 .. code-block:: console
 
@@ -43,6 +43,8 @@ Run the testsuite:
 
    $ make test
 
+Make sure you are in the port directory where MicroPython was built before running the tests. 
+
 Build the Docs:
 
 .. code-block:: console
@@ -63,7 +65,7 @@ Here are some links to references you will find useful.
 Development Links
 -----------------
 
-The various delopment related links:
+The various development related links:
 
 * `MicroPython Internals <http://docs.micropython.org/en/latest/develop/index.html>`_.
 * `Code Conventions <https://github.com/micropython/micropython/blob/master/CODECONVENTIONS.md>`_.
@@ -71,4 +73,4 @@ The various delopment related links:
 * `Development Workflow <https://github.com/micropython/micropython/wiki/DevelWorkflow>`_.
 * `Code Stats <http://micropython.org/resources/code-dashboard/>`_.
 * `ARM Toolchain <https://github.com/micropython/micropython/wiki/Getting-Started-STM>`_.
-* `More Architecture <https://github.com/micropython/micropython/wiki/CrossBranch>`_.
+* `More Architectures <https://github.com/micropython/micropython/wiki/CrossBranch>`_.
