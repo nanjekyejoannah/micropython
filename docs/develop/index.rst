@@ -8,7 +8,7 @@ for both novice and expert contributors.
 Development around MicroPython usually involves modifying the core runtime, porting or 
 maintaining a new library. This guide describes at great depth, the implementation
 details of MicroPython including a getting started guide, compiler internals, porting
-micropython to a new platform and implementing a new MicroPython library.
+MicroPython to a new platform and implementing a new MicroPython library.
 
 .. note::
    For a quick developer checklist on the basics of setting up and making a contribution,
