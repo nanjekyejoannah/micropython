@@ -1,4 +1,3 @@
-.. _developerrefe:
 
 MicroPython Development Reference
 =================================
