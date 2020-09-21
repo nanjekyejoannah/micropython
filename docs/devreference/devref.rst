@@ -4,7 +4,7 @@ Developer Reference
 ===================
 
 For a detailed getting started guide, see :ref:`gettingstarted`.
-This a compressed quick developer checklist on the basics of setting up
+This is a quick developer checklist on the basics of setting up
 and making a contribution.
 
 Clone the source code:
