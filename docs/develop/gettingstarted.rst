@@ -49,7 +49,7 @@ Configure upstream if you cloned your fork.
    $ cd micropython
    $ git remote add upstream https://github.com/micropython/micropython.git
 
-Configure upstream and origin if you cloned the main repository. You can maintain your
+It is common to configure ``upstream`` and ``origin`` on a forked repository to assist with sharing code changes. You can maintain your
 own mapping but it is recommended that origin maps to your fork and upstream to the main
 MicroPython repository:
 
