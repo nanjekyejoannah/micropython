@@ -4,7 +4,7 @@ Getting Started
 ===============
 
 This guide covers a step by step process on setting up version control, obtaining and building
-a copy of the source code on a port, building the Docs, running tests and a description of the 
+a copy of the source code for a port, building the Docs, running tests and a description of the 
 directory structure of the MicroPython code base.
 
 .. note::
