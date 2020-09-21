@@ -174,7 +174,7 @@ Build:
 Please refer to the `stm32 documentation <https://github.com/micropython/micropython/tree/master/ports/stm32>`_ 
 for more details on flashing the firmare.
 
-The windows port
+The Windows port
 ~~~~~~~~~~~~~~~~
 
 The windows port is experimental and based on the unix port. Build on 
