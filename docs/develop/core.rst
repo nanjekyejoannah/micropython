@@ -391,3 +391,192 @@ code statement:
    }
 
 The difference here is we have to handle *viper* typing.
+
+Memory Management
+-----------------
+
+Contrary to programming languages like C/C++, MicroPython hides memory management details 
+from the developer by supporting automatic memory management (AMM).
+AMM is a technique used by operating systems or applications to automatically manage the allocation and deallocation of memory. This eliminates challenges such as forgetting to
+free the memory allocated to an object. AMM also avoids the severe danger of using memory
+that is already released. Automatic memory management takes many forms, one of them being
+garbage collection (GC).
+
+The garbage collector usually has two responsibilities;
+
+#. Allocate new objects in available memory.
+#. Free unused memory.
+
+There are many GC algorithms but MicroPython uses the 
+`Mark and Sweep <https://www.geeksforgeeks.org/mark-and-sweep-garbage-collection-algorithm/>`_
+policy for managing memory. This algorithm has a mark phase that traverses the heap marking all
+live objects while the sweep phase goes through the heap reclaiming all unmarked objects.
+
+.. note::
+   The garbage collector automatically runs on the Linux port but may need to be manually 
+   enabled for other ports.
+
+Garbage collection functionality in MicroPython is available through the ``gc`` built-in
+module:
+
+.. code-block:: console
+   
+   >>> x = 5
+   >>> x
+   5
+   >>> import gc
+   >>> gc.enable()
+   >>> gc.mem_alloc()
+   1312
+   >>> gc.mem_free()
+   2071392
+   >>> gc.collect()
+   19
+   >>> gc.disable()
+   >>> 
+
+Even when ``gc.disable()`` is invoked, collection can be triggered with ``gc.collect()``.
+
+The object model
+~~~~~~~~~~~~~~~~
+
+The structure of a MicroPython object is such that is takes up a word-size. That is to say, 
+pointers and addresses take up a machine word of 8 bytes. Pointers can be 8, 16 to 64 bits.
+
+
+``********|********|********|********|********|********|********|********<tag><tag><tag>``
+
+In a 1 byte address, the 61 bits will hold a value while the 3 lower bits will hold a tag.
+This brings us to a concept that MicroPython supports that involves applying a tag to a pointer.
+
+**Pointer Tagging**
+
+Often than not the lower 3 bits of a pointer are zeros i.e:
+
+``********|********|********|********|********|********|********|********000``
+
+These bits are reserved for purposes of storing a tag. A tag is a place holder that is used
+to store extra information as opposed to introducing a new field to store information usually 
+in the object which may be inefficient. 
+
+The tags can store information like if we are dealing with a small integer, interned(small)
+string or a concrete object as different semantics apply to each of these.
+
+For small integers the mapping is this:
+
+``********|..|******01``
+
+For a small or interned string:
+
+``********|..|******10``
+
+While a concrete object that is neither a small integer nor an interned string takes this form:
+
+``********|..|******00``
+
+Allocation of objects
+~~~~~~~~~~~~~~~~~~~~~~
+
+Small integers take up 8 bytes and will be allocated on the stack and not the heap. This implies
+that the allocation of such integers does not affect the heap. Similarly interned strings are small usually
+less of a length less than 10 are stored as an array.
+
+Everything else which is a concrete object is allocated on the heap and its object structure is such that
+we reserve a field in the object header to store the type of the object.
+
+.. code-block:: console
+
+    +++++++++++
+    +         +
+    + type    + object header
+    +         +
+    +++++++++++
+    +         + object items
+    +         +
+    +         +
+    +++++++++++
+    
+
+The heap's unit of allocation is a block that is to say the heap is further subdivided into blocks of 32 bytes. Another structure also allocated on the heap tracks the allocation of
+objects in each block. This structure is called a *bitmap*.
+
+.. image:: img/bitmap.png
+
+The bitmap tracks whether a block is "free" or "in use" and use two bits to track this state 
+for each block.
+
+The mark-sweep garbage collector manages the objects allocated on the heap. 
+See `py/gc.c <https://github.com/nanjekyejoannah/micropython/blob/master/py/gc.c>`_
+for the full implementation of these details.
+
+Writing Tests
+-------------
+
+Tests in MicroPython are written in the path ``py/tests``:
+
+.. code-block:: console
+   
+   .
+    ├── basics
+    ├── cmdline
+    ├── cpydiff
+    ├── esp32
+    ├── extmod
+    ├── feature_check
+    ├── float
+    ├── import
+    ├── inlineasm
+    ├── internal_bench
+    ├── io
+    ├── jni
+    ├── micropython
+    ├── misc
+    ├── multi_bluetooth
+    ├── multi_net
+    ├── net_hosted
+    ├── net_inet
+    ├── perf_bench
+    ├── pyb
+    ├── pybnative
+    ├── qemu-arm
+    ├── README
+    ├── run-internalbench.py
+    ├── run-multitests.py
+    ├── run-natmodtests.py
+    ├── run-perfbench.py
+    ├── run-tests
+    ├── run-tests-exp.py
+    ├── run-tests-exp.sh
+    ├── stress
+    ├── thread
+    ├── unicode
+    ├── unix
+    └── wipy
+
+There are subfolders maintained to categorize most tests. Add a test by creating a new file in one of the
+existing folders or in a new folder.
+
+For example, add the following code in a file ``print.py`` in the Unix subdirectory:
+
+.. code-block:: python
+   
+   def print_one():
+    print(1)
+   
+   print_one()
+
+If you run your tests, this test should appear in the test output:
+
+.. code-block:: console
+   
+   $ cd ports/unix
+   $ make tests
+   skip  unix/extra_coverage.py
+   pass  unix/ffi_callback.py
+   pass  unix/ffi_float.py
+   pass  unix/ffi_float2.py
+   pass  unix/print.py
+   pass  unix/time.py
+   pass  unix/time2.py
+
+If you create a test under a new subfolder, be sure to update the test script ``run-tests``.
