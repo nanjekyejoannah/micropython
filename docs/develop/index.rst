@@ -18,5 +18,6 @@ MicroPython to a new platform and implementing a new MicroPython library.
    :maxdepth: 3
 
    gettingstarted.rst
+   core.rst
    extendingmicropython.rst
    
