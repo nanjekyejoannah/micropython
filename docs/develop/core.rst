@@ -56,7 +56,7 @@ and omitting the compile function argument:
 The remaining arguments take on the same meaning.
 
 .. note::
-   The function ``DEF_RULE`` or ``DEF_RULE_NC``takes other arguments. For an indepth understanding
+   The function ``DEF_RULE`` or ``DEF_RULE_NC`` takes other arguments. For an indepth understanding
    on what parameters are supported, see ``py/grammar.h``.
 
 Changing the lexer
