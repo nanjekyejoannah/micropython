@@ -56,7 +56,7 @@ and omitting the compile function argument:
 The remaining arguments take on the same meaning.
 
 .. note::
-   The function ``DEF_RULE`` or ``DEF_RULE_NC``takes other arguments. For an indepth understanding
+   The function ``DEF_RULE`` or ``DEF_RULE_NC`` takes other arguments. For an indepth understanding
    on what parameters are supported, see ``py/grammar.h``.
 
 Changing the lexer
@@ -154,7 +154,7 @@ Notable to the parser is that at this stage, some lonely statements like *docstr
 accessible to the compiler. Even optimizations like `string interning <https://en.wikipedia.org/wiki/String_interning>`_ are 
 not applied to *docstrings*.
 
-Compiler Passes
+Compiler passes
 ~~~~~~~~~~~~~~~
 
 Like many compilers, MicroPython compiles all code to MicroPython bytecode or native code for
