@@ -459,7 +459,7 @@ These bits are reserved for purposes of storing a tag. A tag is a place holder t
 to store extra information as opposed to introducing a new field to store information usually 
 in the object which may be inefficient. 
 
-The tags can store information like if we are dealing with a small integer, interned(small)
+The tags can store information like if we are dealing with a small integer, interned (small)
 string or a concrete object as different semantics apply to each of these.
 
 For small integers the mapping is this:
