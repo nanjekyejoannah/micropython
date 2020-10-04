@@ -139,8 +139,8 @@ naming standard accordingly.
 Parsing
 ~~~~~~~~
 
-The parser takes the tokens produced by the lexer converting them to an abstract syntax tree(AST) or
-parse tree. The implementation for the parser is defined in ``py/parse.c``. 
+The parser takes the tokens produced by the lexer and converts them to an abstract syntax tree (AST) or
+*parse tree*. The implementation for the parser is defined in ``py/parse.c``. 
 
 The parser also maintains a table of constants for use in different aspects parsing, similar to what a `symbol 
 table <https://steemit.com/programming/@drifter1/writing-a-simple-compiler-on-my-own-symbol-table-basic-structure>`_ 
