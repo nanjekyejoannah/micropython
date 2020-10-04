@@ -3,7 +3,7 @@
 The MicroPython Core Runtime
 ============================
 
-This chapter details the core components that makeup MicroPython including
+This chapter details the core components of MicroPython including
 the compiler, Memory Management, known optimizations, core and
 dynamic models and a summary of what happens when you run a MicroPython
 program.
@@ -14,7 +14,7 @@ directory.
 The compiler
 ------------
 
-The compilation process in MicroPython involves the following couple of steps:
+The compilation process in MicroPython involves the following steps:
 
 * The lexer converts the stream of text that makes up a MicroPython program into tokens.
 * The parser then converts the tokens into abstract syntax (parse tree).
@@ -23,7 +23,7 @@ The compilation process in MicroPython involves the following couple of steps:
 Changing the grammar
 ~~~~~~~~~~~~~~~~~~~~
 
-MicroPython's grammar is based on the old `CPython grammar <https://docs.python.org/3.5/reference/grammar.html>`_
+MicroPython's grammar is based on the `CPython grammar <https://docs.python.org/3.5/reference/grammar.html>`_
 and is defined in ``py/grammar.h``. This grammar is what is used to parse MicroPython source files.
 
 There are two functions you need to know to define a grammar rule i.e ``DEF_RULE`` or ``DEF_RULE_NC``.
@@ -56,8 +56,8 @@ and omitting the compile function argument:
 The remaining arguments take on the same meaning.
 
 .. note::
-   The function ``DEF_RULE`` or ``DEF_RULE_NC``takes other arguments. For an indepth understanding
-   on what parameters are supported, see ``py/grammar.h``.
+   The function ``DEF_RULE`` or ``DEF_RULE_NC`` takes other arguments. For an in-depth understanding
+   of supported parameters, see ``py/grammar.h``.
 
 Changing the lexer
 ~~~~~~~~~~~~~~~~~~
@@ -139,10 +139,10 @@ naming standard accordingly.
 Parsing
 ~~~~~~~~
 
-The parser takes the tokens produced by the lexer converting them to an abstract syntax tree(AST) or
-parse tree. The implementation for the parser is defined in ``py/parse.c``. 
+The parser takes the tokens produced by the lexer and converts them to an abstract syntax tree (AST) or
+*parse tree*. The implementation for the parser is defined in ``py/parse.c``. 
 
-The parser also maintains a table of constants for use in different aspects parsing, similar to what a `symbol 
+The parser also maintains a table of constants for use in different aspects of parsing, similar to what a `symbol 
 table <https://steemit.com/programming/@drifter1/writing-a-simple-compiler-on-my-own-symbol-table-basic-structure>`_ 
 does.
 
@@ -150,11 +150,11 @@ Several optimizations like `constant folding <http://compileroptimizations.com/c
 on integers for all operations i.e logical, binary, unary, etc, optimizing enhancements on parenthesis
 around expressions are performed during this phase and optimizations on strings.
 
-Notable to the parser is that at this stage, some lonely statements like *docstrings* are discarded and not 
+It's worth noting that *docstrings* are discarded and not 
 accessible to the compiler. Even optimizations like `string interning <https://en.wikipedia.org/wiki/String_interning>`_ are 
 not applied to *docstrings*.
 
-Compiler Passes
+Compiler passes
 ~~~~~~~~~~~~~~~
 
 Like many compilers, MicroPython compiles all code to MicroPython bytecode or native code for
@@ -194,7 +194,7 @@ In the first pass, the compiler computes the stack sizes in scope:
    ..
    }
 
-Other computations regarding scopes and identifiers are computed but also at this point the number of labels that
+Other computations regarding scopes and identifiers are computed and also at this point the number of labels that
 will be required in the emitted code is determined and set.
 
 The second and third passes involve computing the code size and emitting the ``inline assembler code`` for
