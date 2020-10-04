@@ -3,7 +3,7 @@
 The MicroPython Core Runtime
 ============================
 
-This chapter details the core components that makeup MicroPython including
+This chapter details the core components of MicroPython including
 the compiler, Memory Management, known optimizations, core and
 dynamic models and a summary of what happens when you run a MicroPython
 program.
