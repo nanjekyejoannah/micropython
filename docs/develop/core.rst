@@ -395,7 +395,7 @@ The difference here is we have to handle *viper* typing.
 Memory Management
 -----------------
 
-Contrary to programming languages like C/C++, MicroPython hides memory management details 
+Unlike many programming languages such as C/C++, MicroPython hides memory management details 
 from the developer by supporting automatic memory management (AMM).
 AMM is a technique used by operating systems or applications to automatically manage the allocation and deallocation of memory. This eliminates challenges such as forgetting to
 free the memory allocated to an object. AMM also avoids the severe danger of using memory
