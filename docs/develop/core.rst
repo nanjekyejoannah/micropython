@@ -194,7 +194,7 @@ In the first pass, the compiler computes the stack sizes in scope:
    ..
    }
 
-Other computations regarding scopes and identifiers are computed but also at this point the number of labels that
+Other computations regarding scopes and identifiers are computed and also at this point the number of labels that
 will be required in the emitted code is determined and set.
 
 The second and third passes involve computing the code size and emitting the ``inline assembler code`` for
