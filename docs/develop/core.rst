@@ -441,7 +441,7 @@ The object model
 ~~~~~~~~~~~~~~~~
 
 The structure of a MicroPython object is such that is takes up a word-size. That is to say, 
-pointers and addresses take up a machine word of 8 bytes. Pointers can be 8, 16 to 64 bits.
+pointers and addresses take up a machine word of 8 bytes. Pointers can be 8, 16 or 64 bits.
 
 
 ``********|********|********|********|********|********|********|********<tag><tag><tag>``
