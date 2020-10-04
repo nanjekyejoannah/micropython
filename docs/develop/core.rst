@@ -451,7 +451,7 @@ This brings us to a concept that MicroPython supports that involves applying a t
 
 **Pointer Tagging**
 
-Often than not the lower 3 bits of a pointer are zeros i.e:
+More often than not the lower 3 bits of a pointer are zeroes i.e:
 
 ``********|********|********|********|********|********|********|********000``
 
