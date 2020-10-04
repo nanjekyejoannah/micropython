@@ -478,7 +478,7 @@ Allocation of objects
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Small integers take up 8 bytes and will be allocated on the stack and not the heap. This implies
-that the allocation of such integers does not affect the heap. Similarly interned strings are small usually
+that the allocation of such integers does not affect the heap. Similarly, interned strings are small - usually
 less of a length less than 10 are stored as an array.
 
 Everything else which is a concrete object is allocated on the heap and its object structure is such that
