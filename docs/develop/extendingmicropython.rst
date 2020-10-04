@@ -12,6 +12,5 @@ See the `getting started guide
    :maxdepth: 3
 
    cmodules.rst
-   qstr.rst
    natmod.rst
    
