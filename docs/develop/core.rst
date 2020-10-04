@@ -150,7 +150,7 @@ Several optimizations like `constant folding <http://compileroptimizations.com/c
 on integers for all operations i.e logical, binary, unary, etc, optimizing enhancements on parenthesis
 around expressions are performed during this phase and optimizations on strings.
 
-Notable to the parser is that at this stage, some lonely statements like *docstrings* are discarded and not 
+It's worth noting that *docstrings* are discarded and not 
 accessible to the compiler. Even optimizations like `string interning <https://en.wikipedia.org/wiki/String_interning>`_ are 
 not applied to *docstrings*.
 
