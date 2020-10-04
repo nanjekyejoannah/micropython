@@ -23,7 +23,7 @@ The compilation process in MicroPython involves the following steps:
 Changing the grammar
 ~~~~~~~~~~~~~~~~~~~~
 
-MicroPython's grammar is based on the old `CPython grammar <https://docs.python.org/3.5/reference/grammar.html>`_
+MicroPython's grammar is based on the `CPython grammar <https://docs.python.org/3.5/reference/grammar.html>`_
 and is defined in ``py/grammar.h``. This grammar is what is used to parse MicroPython source files.
 
 There are two functions you need to know to define a grammar rule i.e ``DEF_RULE`` or ``DEF_RULE_NC``.
