@@ -14,7 +14,7 @@ directory.
 The compiler
 ------------
 
-The compilation process in MicroPython involves the following couple of steps:
+The compilation process in MicroPython involves the following steps:
 
 * The lexer converts the stream of text that makes up a MicroPython program into tokens.
 * The parser then converts the tokens into abstract syntax (parse tree).
