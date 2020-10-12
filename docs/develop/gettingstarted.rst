@@ -4,7 +4,7 @@ Getting Started
 ===============
 
 This guide covers a step-by-step process on setting up version control, obtaining and building
-a copy of the source code for a port, building the Docs, running tests and a description of the 
+a copy of the source code for a port, building the documentation, running tests and a description of the 
 directory structure of the MicroPython code base.
 
 .. note::
@@ -83,13 +83,50 @@ to work on a development branch.
 You can give it any name. You will have to compile MicroPython whenever you change 
 to a different branch.
 
-Compile and Build the Code
+Compile and build the Code
 --------------------------
 
 For development, you should compile MicroPython for a specific platform which corresponds
-to a port. Before building for any port, first build the MicroPython cross-compiler.
-You should also install the required dependencies for the port in order to sucessfully
-compile and build.
+to a port. Start by installing the required dependencies. Then build the MicroPython 
+cross-compiler before you can successfully compile and build.
+
+Required dependencies
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Before anything, make sure you have a working environment for ``gcc`` and ``GNU make``.
+Ubuntu 20.04 has been used for the example below but other unixes ought to work with
+little modification:
+
+.. code-block:: console
+
+   $ gcc --version
+   gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0
+   Copyright (C) 2019 Free Software Foundation, Inc.
+   This is free software; see the source for copying conditions.  There is NO
+   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Install the required dependencies for linux:
+
+.. code-block:: console
+
+   $ sudo apt-get install build-essential libreadline-dev libffi-dev git \\
+   pkg-config gcc-arm-none-eabi libnewlib-arm-none-eabi
+
+For the stm32 port, the ARM cross-compiler is required:
+
+.. code-block:: console
+
+   $ sudo apt-get install arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib
+
+Python 3 is also recommended:
+
+.. code-block:: console
+
+   $ python
+   Python 3.5.0 (default, Jul 17 2020, 14:04:10) 
+   [GCC 5.4.0 20160609] on linux
+   Type "help", "copyright", "credits" or "license" for more information.
+   >>> 
 
 Build the cross-compiler
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,26 +149,9 @@ If ``mpy-cross`` built successfully, you should see a message similar to this:
 
 Build for the Unix Port
 ~~~~~~~~~~~~~~~~~~~~~~~
-To build for the unix port, make sure you have a working environment for ``gcc`` and ``GNU make``.
-Ubuntu 20.04 has been used for the example below but other unixes ought to work with little
-modification:
 
-.. code-block:: console
-
-   $ gcc --version
-   gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0
-   Copyright (C) 2019 Free Software Foundation, Inc.
-   This is free software; see the source for copying conditions.  There is NO
-   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-Install the required dependencies:
-
-.. code-block:: console
-
-   $ sudo apt-get install build-essential libreadline-dev libffi-dev git \\
-   pkg-config gcc-arm-none-eabi libnewlib-arm-none-eabi
-
-Then build:
+To build for the unix port, make sure all linux related dependencies are 
+installed as detailed in the required dependencies section, then build:
 
 .. code-block:: console
 
@@ -161,14 +181,8 @@ Now run it:
 Build for the stm32 port
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Like the unix port, you need to install some required dependencies.
-The ARM cross-compiler is required:
-
-.. code-block:: console
-
-   $ sudo apt-get install arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib
-
-Build:
+Like the unix port, you need to install some required dependencies
+as detailed in the required dependencies section, then build:
 
 .. code-block:: console
 
@@ -200,17 +214,17 @@ Then run easily with ``wine``:
 Refer to the `windows port documentation <https://github.com/micropython/micropython/tree/master/ports/windows>`_
 on more details on building using Cygwin and MS visual Studio 2013 or higher.
 
-Build the Docs
---------------
+Build the documentation
+------------------------
 
-MicroPython Documentation is created using ``Sphinx``. If you have already
+MicroPython documentation is created using ``Sphinx``. If you have already
 installed Python, then install ``Sphinx`` using ``pip``:
 
 .. code-block:: console
 
    $ pip install sphinx
 
-Navigate to the docs directory:
+Navigate to the ``docs`` directory:
 
 .. code-block:: console
 
@@ -237,7 +251,7 @@ To run all tests in the testsuite, use ``make``:
 
 .. warning::
    Make sure you are in the port directory where MicroPython was built before running the tests. 
-   Running outside your port will not work.
+   Running the tests outside your port will not work.
 
 Folder structure
 ----------------

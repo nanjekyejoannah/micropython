@@ -37,7 +37,7 @@ Run MicroPython:
 
 On windows use ``wine`` and replace ``./micropython`` with ``wineconsole --backend=curses ./micropython.exe``.
 
-Run the testsuite:
+Run the test suite:
 
 .. code-block:: console
 
@@ -60,7 +60,7 @@ Here are some links to references you will find useful.
 * `The MicroPython Repository <https://github.com/micropython/micropython>`_.
 * `Open Issues <https://github.com/micropython/micropython/issues>`_.
 * `Developer Forum <https://forum.micropython.org/>`_.
-* `The Wiki <https://github.com/micropython/micropython/wiki>`_.
+* `The MicroPython Wiki <https://github.com/micropython/micropython/wiki>`_.
 
 Development Links
 -----------------

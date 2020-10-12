@@ -4,9 +4,8 @@ The MicroPython Core Runtime
 ============================
 
 This chapter details the core components of MicroPython including
-the compiler, Memory Management, known optimizations, core and
-dynamic models and a summary of what happens when you run a MicroPython
-program.
+the compiler, memory management, known optimizations, the core and
+dynamic modules and the public C API.
 
 For purposes of this chapter, the location of focus is the ``py``
 directory.
@@ -26,7 +25,7 @@ Changing the grammar
 MicroPython's grammar is based on the `CPython grammar <https://docs.python.org/3.5/reference/grammar.html>`_
 and is defined in ``py/grammar.h``. This grammar is what is used to parse MicroPython source files.
 
-There are two functions you need to know to define a grammar rule i.e ``DEF_RULE`` or ``DEF_RULE_NC``.
+There are two macros you need to know to define a grammar rule i.e ``DEF_RULE`` or ``DEF_RULE_NC``.
 ``DEF_RULE`` allows you to define a rule with a compile function. 
 
 A simple grammar definition with a compile function looks like the following:
@@ -43,10 +42,14 @@ For example, in this case, our ``add1`` statement is similar to ADD1 in assembly
 and adds 1 to it. Therefore, the ``add1_stmt`` has two nodes associated with it. One for the statement itself 
 i.e ``add1`` and the other for its argument.
 
+.. note::
+   The ``add1`` rule here is just an example and not part of the standard
+   MicroPython grammar.
+
 Finally, the fourth argument in this example is the token associated with the rule. This token should be
 defined in the lexer by editing ``py/lexer.h``.
 
-Defining the same rule without a compile function is achieved by using the ``DEF_RULE_NC`` function
+Defining the same rule without a compile function is achieved by using the ``DEF_RULE_NC`` macro
 and omitting the compile function argument:
 
 .. code-block:: c
@@ -85,7 +88,7 @@ Add this token by editing the ``_mp_token_kind_t`` enum:
 Since, we are adding a keyword, edit ``py/lexer.c`` to add the new keyword:
 
 .. code-block:: c
-   :emphasize-lines: 12
+   :emphasize-lines: 40
 
    STATIC const char *const tok_kw[] = {
     "False",
@@ -133,7 +136,7 @@ Notice the keyword is named depending on what you want it to be. For consistency
 naming standard accordingly.
 
 .. note::
-   The order of these keywords in ``py/lexer.h`` should match the order of tokens in the enum
+   The order of these keywords in ``py/lexer.c`` should match the order of tokens in the enum
    defined in ``py/lexer.h``.
 
 Parsing
@@ -160,9 +163,16 @@ Compiler passes
 Like many compilers, MicroPython compiles all code to MicroPython bytecode or native code for
 execution by the virtual machine. The functionality that achieves this is implemented in``py/compile.c``.
 The most relevant method you should know 
-about is ``mp_raw_code_t *mp_compile_to_raw_code(mp_parse_tree_t *parse_tree, qstr source_file, bool is_repl)``. 
+about is:
+
+.. code-block:: c
+
+   mp_raw_code_t *mp_compile_to_raw_code(mp_parse_tree_t *parse_tree, 
+   qstr source_file, bool is_repl)
 
 The compiler compiles the code in several passes.
+
+**First pass**
 
 In the first pass, the compiler computes the stack sizes in scope:
 
@@ -194,8 +204,11 @@ In the first pass, the compiler computes the stack sizes in scope:
    ..
    }
 
-Other computations regarding scopes and identifiers are computed and also at this point the number of labels that
-will be required in the emitted code is determined and set.
+Other computations regarding scopes and identifiers are computed too.
+At this point, the number of labels that will be required in the 
+emitted code is also determined and set.
+
+**Second and third passes**
 
 The second and third passes involve computing the code size and emitting the ``inline assembler code`` for
 the different architectures:
@@ -236,6 +249,8 @@ The inline assembler code comprises assembly instructions in a Python function.
 See `the inline assembler tutorial 
 <https://docs.micropython.org/en/latest/pyboard/tutorial/assembler.html#pyboard-tutorial-assembler>`_ 
 for more details.
+
+**Fourth, fifth and sixth passes**
 
 The other two passes compute the stack and code size, while the last pass emits the final code:
 
@@ -278,7 +293,8 @@ bytecode.
    }
 
 The bytecode option is the default but something unique to note for the native code option is that there is 
-another option via ``VIPER``.
+another option via ``VIPER``. See the *Emitting native code* section for
+more details on viper annotations.
 
 Emitting bytecode
 ~~~~~~~~~~~~~~~~~
@@ -390,8 +406,14 @@ code statement:
     }
    }
 
-The difference here is we have to handle *viper* typing.
+The difference here is that we have to handle *viper typing*. Viper annotations allow
+us to emit more that one type of object. By default, Python objects are emmited
+but with Viper, something can be declared as a Python object or any type. Viper is
+therefore a subset of Python objects infact if anything is declared in Viper
+as a Python object, it acts as native Python. Viper typing may break Python equivalence as
+intergers become native integers and not Python objects.
 
+<<<<<<< HEAD
 Memory Management
 -----------------
 
@@ -399,6 +421,171 @@ Unlike many programming languages such as C/C++, MicroPython hides memory manage
 from the developer by supporting automatic memory management (AMM).
 AMM is a technique used by operating systems or applications to automatically manage the allocation and deallocation of memory. This eliminates challenges such as forgetting to
 free the memory allocated to an object. AMM also avoids the critical issue of using memory
+=======
+Optimizations
+-------------
+
+String interning
+~~~~~~~~~~~~~~~~~
+
+having to store duplicate copies of the same string.  Primarily, this applies to
+identifiers in your code, as something like a function or variable name is very
+likely to appear in multiple places in the code.  In MicroPython an interned
+string is called a QSTR (uniQue STRing).
+
+A QSTR value (with type ``qstr``) is an index into a linked list of QSTR pools.
+QSTRs store their length and a hash of their contents for fast comparison during
+the de-duplication process.  All bytecode operations that work with strings use
+a QSTR argument.
+
+**Compile-time QSTR generation**
+
+In the MicroPython C code, any strings that should be interned in the final
+firmware are written as ``MP_QSTR_Foo``.  At compile time this will evaluate to
+a ``qstr`` value that points to the index of ``"Foo"`` in the QSTR pool.
+
+A multi-step process in the ``Makefile`` makes this work.  In summary, this
+process has three parts:
+
+1. Find all ``MP_QSTR_Foo`` tokens in the code.
+
+2. Generate a static QSTR pool containing all the string data (including lengths and hashes).
+
+3. Replace all ``MP_QSTR_Foo`` (via the preprocessor) with their corresponding index.
+
+``MP_QSTR_Foo`` tokens are searched for in two sources:
+
+1. All files referenced in ``$(SRC_QSTR)``.  This is all C code (i.e. ``py``,
+   ``extmod``, ``ports/stm32``) but not including third-party code such as
+   ``lib``.
+
+2. Additional ``$(QSTR_GLOBAL_DEPENDENCIES)`` (which includes ``mpconfig*.h``).
+
+*Note:* ``frozen_mpy.c`` (generated by mpy-tool.py) has its own QSTR generation
+and pool.
+
+Some additional strings that can't be expressed using the ``MP_QSTR_Foo`` syntax
+(e.g. they contain non-alphanumeric characters) are explicitly provided in
+``qstrdefs.h`` and ``qstrdefsport.h`` via the ``$(QSTR_DEFS)`` variable.
+
+Processing happens in the following stages:
+
+1. ``qstr.i.last`` is the concatenation of putting every single input file through the C pre-processor.  This means that any conditionally disabled code will be removed, and macros expanded.  This means we don't add strings to the pool that won't be used in the final firmware.  Because at this stage (thanks to the ``NO_QSTR`` macro added by ``QSTR_GEN_EXTRA_CFLAGS``) there is no definition for ``MP_QSTR_Foo`` it passes through this stage unaffected.  This file also includes comments from the preprocessor that include line number information.  Note that this step only uses files that have changed, which means that ``qstr.i.last`` will only contain data from files that have changed since the last compile.
+2. ``qstr.split`` is an empty file created after running ``makeqstrdefs.py split``
+   on qstr.i.last. It's just used as a dependency to indicate that the step ran.
+   This script outputs one file per input C file,  ``genhdr/qstr/...file.c.qstr``,
+   which contains only the matched QSTRs. Each QSTR is printed as ``Q(Foo)``.
+   This step is necessary to combine the existing files with the new data generated from the incremental update in ``qstr.i.last``.
+
+3. ``qstrdefs.collected.h`` is the output of concatenating ``genhdr/qstr/*``
+   using ``makeqstrdefs.py cat``.  This is now the full set of ``MP_QSTR_Foo``'s
+   found in the code, now formatted as ``Q(Foo)``, one-per-line, with duplicates.
+   This file is only updated if the set of qstrs has changed.  A hash of the QSTR
+   data is written to another file (``qstrdefs.collected.h.hash``) which allows it to track changes across builds.
+
+4. ``qstrdefs.preprocessed.h`` adds in the QSTRs from qstrdefs*.  It
+   concatenates ``qstrdefs.collected.h`` with ``qstrdefs*.h``, then it transforms
+   each line from ``Q(Foo)`` to ``"Q(Foo)"`` so they pass through the preprocessor
+   unchanged.  Then the preprocessor is used to deal with any conditional compilation in ``qstrdefs*.h``.  Then the transformation is undone back to
+   ``Q(Foo)``, and saved as ``qstrdefs.preprocessed.h``.
+
+5. ``qstrdefs.generated.h`` is the output of ``makeqstrdata.py``.  For each
+   ``Q(Foo)`` in qstrdefs.preprocessed.h (plus some extra hard-coded ones), it outputs
+   ``QDEF(MP_QSTR_Foo, (const byte*)"hash" "Foo")``.
+
+Then in the main compile, two things happen with ``qstrdefs.generated.h``:
+
+1. In qstr.h, each QDEF becomes an entry in an enum, which makes ``MP_QSTR_Foo``
+   available to code and equal to the index of that string in the QSTR table.
+
+2. In qstr.c, the actual QSTR data table is generated as elements of the
+   ``mp_qstr_const_pool->qstrs``.
+
+.. _`string interning`: https://en.wikipedia.org/wiki/String_interning
+
+**Run-time QSTR generation**
+
+Additional QSTR pools can be created at runtime so that strings can be added to
+them. For example, the code::
+
+  foo[x] = 3
+
+Will need to create a QSTR for the value of ``x`` so it can be used by the
+"load attr" bytecode.
+
+Also, when compiling Python code, identifiers and literals need to have QSTRs
+created.  Note: only literals shorter than 10 characters become QSTRs.  This is
+because a regular string on the heap always takes up a minimum of 16 bytes (one
+GC block), whereas QSTRs allow them to be packed more efficiently into the pool.
+
+QSTR pools (and the underlying "chunks" that store the string data) are allocated
+on-demand on the heap with a minimum size.
+
+Open addressing
+~~~~~~~~~~~~~~~
+
+MicroPython dictionaries use a technique called `open addressing <https://en.wikipedia.org/wiki/Open_addressing>`_
+to resolve collisions. Collisions are very common occurrences and happen when two items happen to hash to the same
+slot or location. For example, given a hash setup as this:
+
+.. image:: img/collision.png
+
+If there is a request to fill slot ``0`` with ``70``, since the slot ``0`` is not empty, open addressing
+finds the next available slot in the dictionary to service this request. This sequential search for an alternate
+location is called *probing*. There are several sequence probing algorithms but MicroPython uses
+linear probing that is described in the next section.
+
+Linear probing
+~~~~~~~~~~~~~~
+
+Linear probing is one of the methods for finding an available address or slot in a dictionary. In MicroPython,
+it is used with open addressing. To service the request described above, unlike other probing algorithms,
+linear probing assumes a fixed interval of ``1`` between probes. The request will therefore be serviced by
+placing the item in the next free slot which is slot ``4`` in our example:
+
+.. image:: img/linprob.png
+
+The same methods i.e open addressing and linear probing are used to search for an item in a dictionary. 
+Assume we want to search for the data item ``33``. The computed hash value will be 2. Looking at slot 2 
+reveals ``33``, at this point, we return ``True``. Searching for ``70`` is quite different as there was a 
+collision at the time of insertion. Therefore computing the hash value is ``0`` which is currently
+holding ``44``. Instead of simply returning ``False``, we perform a sequential search starting at point
+``1`` until the item ``70`` is found or we encounter a free slot. This is the general way of performing
+look-ups in hashes:
+
+.. code-block:: c
+   
+   // not yet found, keep searching in this table
+   pos = (pos + 1) % set->alloc;
+
+   if (pos == start_pos) {
+    // search got back to starting position, so index is not in table
+    if (lookup_kind & MP_MAP_LOOKUP_ADD_IF_NOT_FOUND) {
+        if (avail_slot != NULL) {
+            // there was an available slot, so use that
+            set->used++;
+            *avail_slot = index;
+            return index;
+        } else {
+            // not enough room in table, rehash it
+            mp_set_rehash(set);
+            // restart the search for the new element
+            start_pos = pos = hash % set->alloc;
+        }
+    } else {
+        return MP_OBJ_NULL;
+    }
+   }
+
+Memory management
+-----------------
+
+Unlike many programming languages such as C/C++, MicroPython hides memory management 
+details from the developer by supporting automatic memory management.
+Automatic memory management is a technique used by operating systems or applications to automatically manage 
+the allocation and deallocation of memory. This eliminates challenges such as forgetting to
+free the memory allocated to an object. Automatic memory management also avoids the critical issue of using memory
+>>>>>>> db88b0d... viper and block properties
 that is already released. Automatic memory management takes many forms, one of them being
 garbage collection (GC).
 
@@ -449,7 +636,7 @@ pointers and addresses take up a machine word of 8 bytes. Pointers can be 8, 16 
 In a 1 byte address, the 61 bits will hold a value while the 3 lower bits will hold a tag.
 This brings us to a concept that MicroPython supports that involves applying a tag to a pointer.
 
-**Pointer Tagging**
+**Pointer tagging**
 
 More often than not the lower 3 bits of a pointer are zeroes i.e:
 
@@ -478,11 +665,16 @@ Allocation of objects
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Small integers take up 8 bytes and will be allocated on the stack and not the heap. This implies
+<<<<<<< HEAD
 that the allocation of such integers does not affect the heap. Similarly, interned strings are small - usually
 less of a length less than 10 are stored as an array.
+=======
+that the allocation of such integers does not affect the heap. Similarly, interned strings are small - usually,
+of a length less than 10 are stored as an array.
+>>>>>>> db88b0d... viper and block properties
 
 Everything else which is a concrete object is allocated on the heap and its object structure is such that
-we reserve a field in the object header to store the type of the object.
+a field is reserved in the object header to store the type of the object.
 
 .. code-block:: console
 
@@ -509,7 +701,19 @@ The mark-sweep garbage collector manages the objects allocated on the heap.
 See `py/gc.c <https://github.com/nanjekyejoannah/micropython/blob/master/py/gc.c>`_
 for the full implementation of these details.
 
-Writing Tests
+**Allocation: heap layout**
+
+The heap is arranged such that it consists of blocks in pools. A block
+can have different properties:
+
+- *ATB(allocation table byte):* If set, then the block is a normal block
+- *FREE:* Free block
+- *HEAD:* Head of a chain of blocks
+- *TAIL:* In the tail of a chain of blocks
+- *MARK :* Marked head block
+- *FTB(finaliser table byte):* If set, then the block has a finaliser
+
+Writing tests
 -------------
 
 Tests in MicroPython are written in the path ``py/tests``:
@@ -580,3 +784,115 @@ If you run your tests, this test should appear in the test output:
    pass  unix/time2.py
 
 If you create a test under a new subfolder, be sure to update the test script ``run-tests``.
+<<<<<<< HEAD
+=======
+
+Adding a core module
+---------------------
+
+Like CPython, MicroPython has builtin modules that can be accessed through import statements.
+An example is the ``gc`` module discussed earlier:
+
+.. code-block:: console
+   
+   >>> import gc
+   >>> gc.enable()
+   >>> 
+
+MicroPython has several other builtin standard modules like ``io``, ``uarray`` etc.
+Adding a new module involves several modifications
+
+Create the ``C`` file in the ``py`` directory. In this example, we are adding a new
+module ``subinterpreters``:
+
+.. code-block:: c
+   
+   #include "py/builtin.h"
+   #include "py/gc.h"
+
+   #if #if MICROPY_PY_SUB
+
+   // list()
+   STATIC void py_subinterpreters_list(void) {
+    gc_collect();
+   }
+   MP_DEFINE_CONST_FUN_OBJ_0(subinterpreters_list_obj, py_subinterpreters_list);
+
+
+   STATIC const mp_rom_map_elem_t mp_module_subinterpreters_globals_table[] = {
+    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_subinterpreters) },
+    { MP_ROM_QSTR(MP_QSTR_list), MP_ROM_PTR(&subinterpreters_list_obj) },
+   };
+
+   STATIC MP_DEFINE_CONST_DICT(mp_module_subinterpreters_globals, mp_module_subinterpreters_globals_table);
+
+   const mp_obj_module_t mp_module_subinterpreters = {
+    .base = { &mp_type_module },
+    .globals = (mp_obj_dict_t *)&mp_module_subinterpreters_globals,
+   };
+
+   MP_REGISTER_MODULE(MP_QSTR_subinterpreters, mp_module_subinterpreters, MICROPY_PY_SUB);
+
+   #endif
+
+The implementation includes a definition of all functions related to the module and adds the
+functions to the module's global table. It also registers the module with its table of globals:
+
+.. code-block:: c
+   
+   const mp_obj_module_t mp_module_subinterpreters = {
+    .base = { &mp_type_module },
+    .globals = (mp_obj_dict_t *)&mp_module_subinterpreters_globals,
+   };
+
+Exposed the module for use in Python with:
+
+.. code-block:: c
+
+   MP_REGISTER_MODULE(MP_QSTR_subinterpreters, mp_module_subinterpreters, MICROPY_PY_SUB);
+
+After the above implementation, expose the module in the builtins header file.
+Modify the ``builtins.h`` file:
+
+.. code-block:: c
+
+   extern const mp_obj_module_t mp_module_subinterpreters;
+
+Then modify ``objmodule.c`` with the module details:
+
+.. code-block:: c
+
+   #if MICROPY_PY_GC
+    { MP_ROM_QSTR(MP_QSTR_subinterpreters), MP_ROM_PTR(&mp_module_subinterpreters) },
+   #endif
+
+If this was a success the module should now be importable:
+
+.. code-block:: console
+   
+   >>> import subinterpreters
+   >>> subinterpreters.list()
+   >>> 
+
+Our ``list()`` function currently returns nothing as it calls ``gc_collect()``.
+
+The public C API
+----------------
+
+The public C-API comprises functions defined in all ``C`` header files in the ``py``
+directory. Most of the important core runtime C APIS are exposed in ``runtime.h`` and
+``obj.h``.
+
+An example of such an API is one for LED manipulations exposed in the ``nrf`` port:
+
+.. code-block:: c
+
+   void led_init(void);
+   void led_state(board_led_t, int);
+   void led_toggle(board_led_t);
+
+   extern const mp_obj_type_t board_led_type;
+
+At its core, any non-static functions and macros in header files make up the public
+API and can be used to access very low-level details of MicroPython.
+>>>>>>> db88b0d... viper and block properties
