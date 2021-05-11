@@ -1,4 +1,4 @@
-MicroPython license information
+SymPy license information
 ===============================
 
 The MIT License (MIT)
