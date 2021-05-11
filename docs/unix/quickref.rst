@@ -1,6 +1,6 @@
 .. _unix_quickref:
 
-Quick reference for the UNIX and Windows ports
+Common PitFalls
 ==============================================
 
 Command line options

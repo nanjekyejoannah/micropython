@@ -1,7 +1,7 @@
 .. _pyboard_quickref:
 
-Quick reference for the pyboard
-===============================
+SymPy Papers
+=============
 
 The below pinout is for PYBv1.1.  You can also view pinouts for
 other versions of the pyboard:

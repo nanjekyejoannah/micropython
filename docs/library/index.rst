@@ -1,6 +1,6 @@
 .. _micropython_lib:
 
-MicroPython libraries
+Getting Started
 =====================
 
 .. warning::

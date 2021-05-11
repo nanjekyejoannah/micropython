@@ -1,7 +1,7 @@
 .. _esp32_quickref:
 
-Quick reference for the ESP32
-=============================
+SymPy Documentation Style Guide
+================================
 
 .. image:: img/esp32.jpg
     :alt: ESP32 board

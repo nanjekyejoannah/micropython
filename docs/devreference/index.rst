@@ -1,5 +1,5 @@
 
-MicroPython Development Reference
+SymPy Special Topics
 =================================
 
 This is an inclusive guide on developing MicroPython aimed at providing

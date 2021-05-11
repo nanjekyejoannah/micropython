@@ -1,7 +1,7 @@
 .. _esp8266_quickref:
 
-Quick reference for the ESP8266
-===============================
+About SymPy
+===========
 
 .. image:: img/adafruit_products_pinoutstop.jpg
     :alt: Adafruit Feather HUZZAH board
